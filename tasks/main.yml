@@ -1,0 +1,6 @@
+---
+# tasks file for iac_jenkins-pipe-role-test
+
+- name: Mockup
+  debug:
+    msg: "This role is empty!"
