@@ -215,7 +215,7 @@ node {
 
      echo "Deleting Ansible workspace directory"
 
-     rm -rf "$ANSIBLE_WORKSPACE_DIR"
+     sh "rm -rf $ANSIBLE_WORKSPACE_DIR"
 
      if (BUILD_STATUS == 1){
 
