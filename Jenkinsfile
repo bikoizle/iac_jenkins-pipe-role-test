@@ -146,6 +146,10 @@ node {
           sh "cp $ANSIBLE_WORKSPACE_DIR/roles/${env.JOB_BASE_NAME}/tests/* $ANSIBLE_WORKSPACE_DIR"
           sh "sed -i 's|localhost|$OS_VM_IP_ADDRESS|g' $ANSIBLE_WORKSPACE_DIR/inventory $ANSIBLE_WORKSPACE_DIR/test.yml"
 
+          echo "Removing old VM IP address ssh fingerprint"
+
+          sh "ssh-keygen -R $OS_VM_IP_ADDRESS"
+
         }
 
         stage("Run Playbook"){
@@ -158,10 +162,6 @@ node {
     
         stage("Test Playbook"){
 
-         echo "Removing old VM IP address ssh fingerprint"
-
-         sh "ssh-keygen -R $OS_VM_IP_ADDRESS"
-    
          echo "Checking pytests scripts with flake8"
     
          sh "flake8 $ANSIBLE_WORKSPACE_DIR/*.py"
