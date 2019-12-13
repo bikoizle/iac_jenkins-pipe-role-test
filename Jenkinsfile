@@ -3,7 +3,7 @@ def DATE = Calendar.getInstance().getTime().format('YYYYMMdd-hhmmss',TimeZone.ge
 
 def GIT_CREDS_ID = "70c6a9da-bbb3-45b8-8565-d34f227696d9";
 
-def GIT_VMBUILD_PBK_TAG = "0.1.1";
+def GIT_VMBUILD_PBK_TAG = "0.2.1";
 def GIT_VMDELETE_PBK_TAG = "0.1.0";
 def GIT_GETVMINFO_PBK_TAG = "0.1.3";
 
@@ -29,6 +29,7 @@ def OS_IMAGE_NAME = "CustomOS-20191207-091815";
 def OS_VM_NAME = "customos_test" + "-" + "$DATE";
 def OS_VM_BUILD_TIMEOUT = "200";
 def OS_VM_FLAVOUR = "lab.small";
+def OS_VM_VOL_SIZE = "20";
 def OS_VM_NET = "private_network";
 
 def OS_VM_INFO;
@@ -94,6 +95,7 @@ node {
                    vm_name: "$OS_VM_NAME",
                    timeout: "$OS_VM_BUILD_TIMEOUT",
                    vm_flavour: "$OS_VM_FLAVOUR",
+                   vm_vol_size: "$OS_VM_VOL_SIZE",
                    vm_net: "$OS_VM_NET"
                ])
           }
@@ -149,6 +151,19 @@ node {
           echo "Removing old VM IP address ssh fingerprint"
 
           sh "ssh-keygen -R $OS_VM_IP_ADDRESS"
+
+        }
+
+        stage("Wait for VM"){
+
+          echo "Waiting for VM to be ready"
+
+          timeout(time: 1, unit: 'HOURS'){
+             waitUntil{
+                status = sh(returnStatus: true, script: "ping -c 9 $OS_VM_IP_ADDRESS")
+                return status == 0
+             }
+         }
 
         }
 
