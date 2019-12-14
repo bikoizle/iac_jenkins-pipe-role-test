@@ -160,7 +160,7 @@ node {
 
           timeout(time: 1, unit: 'HOURS'){
              waitUntil{
-                status = sh(returnStatus: true, script: "ping -c 9 $OS_VM_IP_ADDRESS")
+                status = sh(returnStatus: true, script: "ansible -i '$OS_VM_IP_ADDRESS,' all -m ping")
                 return status == 0
              }
          }
